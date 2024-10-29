@@ -1,5 +1,5 @@
 prefect>=3.0.0
-prefect-github>=0.3.0
+prefect-github
 psycopg2-binary 
 requests 
 pandas 

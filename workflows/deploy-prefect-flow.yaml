@@ -19,7 +19,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           cache: "pip"
 
       - name: Install dependencies
@@ -40,7 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python - <<EOF
+          python - <<'EOF'
           from prefect.blocks.system import Secret
           from prefect_github import GitHubCredentials
 
@@ -57,7 +57,7 @@ jobs:
 
       - name: Create GitHub Repository Block
         run: |
-          python - <<EOF
+          python - <<'EOF'
           from prefect_github import GitHubRepository
           github_repo = GitHubRepository(
               repository='${{ github.repository }}',
