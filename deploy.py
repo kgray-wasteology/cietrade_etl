@@ -5,14 +5,7 @@ from prefect_github import GitHubRepository, GitHubCredentials
 
 
 if __name__ == "__main__":
-    # Define the GitHub repository
-    # github_repo = {
-    #     "repository_url": "https://github.com/kgray-wasteology/cietrade_etl",
-    #     "reference": "main",
-    #     "token": "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",
-    # }
-
-    github_token = "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"
+    github_token = os.getenv("GITHUB_TOKEN")
     github_url = f"https://{github_token}@github.com/kgray-wasteology/cietrade_etl"
 
     # Create deployment from source
