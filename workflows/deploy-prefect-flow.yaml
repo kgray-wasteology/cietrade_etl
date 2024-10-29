@@ -26,30 +26,37 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install prefect-github  # Explicitly install prefect-github
+          pip install prefect-github
           prefect block register -m prefect_github
 
       - name: Prefect Auth
         uses: PrefectHQ/actions-prefect-auth@v1
         with:
           prefect-api-key: ${{ secrets.PREFECT_API_KEY }}
-          prefect-workspace: "wasteology/default" # Hardcoded since we know the correct workspace
+          prefect-workspace: "wasteology/default"
 
       - name: Create GitHub Credentials Block
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python -c "
+          python - <<EOF
           from prefect_github import GitHubCredentials
+          from prefect.blocks.system import Secret
+
+          # First create a Secret block for the GitHub token
+          secret_block = Secret(value="${{ secrets.GITHUB_TOKEN }}")
+          secret_block.save("github-token-secret", overwrite=True)
+
+          # Then create the GitHub Credentials block using the secret
           github_creds = GitHubCredentials(
-              token='${{ secrets.GITHUB_TOKEN }}'
+              token=Secret.load("github-token-secret")
           )
           github_creds.save('github-credentials', overwrite=True)
-          "
+          EOF
 
       - name: Create GitHub Repository Block
         run: |
-          python -c "
+          python - <<EOF
           from prefect_github import GitHubRepository
           github_repo = GitHubRepository(
               repository='${{ github.repository }}',
@@ -57,7 +64,7 @@ jobs:
               credentials='github-credentials'
           )
           github_repo.save('cietrade-etl-repo', overwrite=True)
-          "
+          EOF
 
       - name: Deploy Flow
         run: python workflows/deploy.py
