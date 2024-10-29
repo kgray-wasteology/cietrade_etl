@@ -4,3 +4,4 @@ requests
 pandas 
 sqlalchemy 
 python-dotenv
+prefect_github
