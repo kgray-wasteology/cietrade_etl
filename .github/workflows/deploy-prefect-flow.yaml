@@ -40,7 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python - <<EOF
+          python - <<'EOF'
           from prefect.blocks.system import Secret
           from prefect_github import GitHubCredentials
 
@@ -57,7 +57,7 @@ jobs:
 
       - name: Create GitHub Repository Block
         run: |
-          python - <<EOF
+          python - <<'EOF'
           from prefect_github import GitHubRepository
           github_repo = GitHubRepository(
               repository='${{ github.repository }}',
