@@ -1,7 +1,6 @@
-prefect 
+prefect>=3.0.0
+prefect-github>=0.3.0
 psycopg2-binary 
 requests 
 pandas 
 sqlalchemy 
-python-dotenv
-prefect_github
