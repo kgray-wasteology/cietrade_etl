@@ -25,8 +25,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install "prefect-github>=0.4.1"
+          pip uninstall prefect -y
+          pip install "prefect>=3.0.0"
+          pip install prefect-github
           prefect block register -m prefect_github
 
       - name: Prefect Auth
@@ -40,18 +41,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python - <<EOF
-          from prefect_github import GitHubCredentials
           from prefect.blocks.system import Secret
-          from pydantic import BaseModel
+          from prefect_github import GitHubCredentials
 
-          class Config(BaseModel):
-              arbitrary_types_allowed = True
-
-          # First create a Secret block for the GitHub token
+          # Create Secret block for GitHub token
           secret_block = Secret(value="${{ secrets.GITHUB_TOKEN }}")
           secret_block.save("github-token-secret", overwrite=True)
 
-          # Then create the GitHub Credentials block using the secret
+          # Create GitHub Credentials using the secret
           github_creds = GitHubCredentials(
               token=Secret.load("github-token-secret")
           )
