@@ -1,5 +1,4 @@
 # @format
-
 name: Deploy Prefect flow
 
 on:
@@ -19,16 +18,29 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.11"
           cache: "pip"
+          cache-dependency-path: |
+            **/requirements.txt
 
+      # Clear any existing Prefect installations
+      - name: Clear existing Prefect
+        run: |
+          pip uninstall -y prefect prefect-github
+          pip cache purge
+
+      # Install dependencies with explicit versions
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip uninstall prefect -y
           pip install "prefect>=3.0.0"
-          pip install prefect-github
+          pip install "prefect-github>=0.3.0"
           prefect block register -m prefect_github
+
+      - name: Check Prefect Version
+        run: |
+          python -c "import prefect; print(f'Prefect version: {prefect.__version__}')"
+          python -c "import prefect_github; print(f'Prefect-GitHub version: {prefect_github.__version__}')"
 
       - name: Prefect Auth
         uses: PrefectHQ/actions-prefect-auth@v1
