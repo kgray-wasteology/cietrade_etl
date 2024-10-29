@@ -1,5 +1,5 @@
 from prefect import flow
-from prefect_github import GitHubRepository
+from prefect_github.repository import GitHubRepository
 from accounts_flow import accounts_update_flow
 from datetime import timedelta
 

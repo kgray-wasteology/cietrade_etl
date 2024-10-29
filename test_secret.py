@@ -10,3 +10,7 @@ print(secret.get())
 
 secret = Secret.load("github-credentials")
 print(secret.get())
+
+
+secret = Secret.load("github-repository")
+print(secret.get())
