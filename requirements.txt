@@ -1,0 +1,6 @@
+prefect 
+psycopg2-binary 
+requests 
+pandas 
+sqlalchemy 
+python-dotenv
